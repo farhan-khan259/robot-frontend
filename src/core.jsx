@@ -872,7 +872,14 @@ export function Pager({ data, page, setPage }) {
     </div>
   ) : null;
 }
-export function Modal({ title, close, children, wide = false, className = "" }) {
+export function Modal({
+  title,
+  close,
+  children,
+  wide = false,
+  className = "",
+  showClose = true,
+}) {
   const ref = useRef();
   useEffect(() => {
     const prior = document.activeElement,
@@ -917,13 +924,15 @@ export function Modal({ title, close, children, wide = false, className = "" }) 
       >
         <div className={s.modalHead}>
           <h2>{title}</h2>
-          <button
-            className={s.iconButton}
-            onClick={close}
-            aria-label="Close dialog"
-          >
-            <Icon name="X" />
-          </button>
+          {showClose && (
+            <button
+              className={s.iconButton}
+              onClick={close}
+              aria-label="Close dialog"
+            >
+              <Icon name="X" />
+            </button>
+          )}
         </div>
         {children}
       </section>

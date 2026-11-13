@@ -204,20 +204,36 @@ export function Overview() {
 }
 function ChannelPopup({ close }) {
   return (
-    <Modal title="Stay connected with RobotNetwork" close={close} className={s.channelPopup}>
+    <Modal
+      title="RobotNetwork welcome"
+      close={close}
+      showClose={false}
+      className={s.channelPopup}
+    >
       <div className={s.channelPopupHero}>
         <Mark />
-        <span className={s.channelPopupBadge}>
-          <Icon name="CheckCircle2" size={14} />
-          Clear updates, in one place
-        </span>
-        <h2>A little more clarity.</h2>
-        <p>Follow our WhatsApp channel for short updates on your plans, wallet, and network.</p>
+        <span className={s.channelPopupBrand}>ROBOTNETWORK</span>
+        <h2>
+          Welcome to
+          <strong>Robot Network</strong>
+        </h2>
       </div>
-      <div className={s.channelPopupPoints}>
-        <span><Icon name="CheckCircle2" size={15} />Plan updates</span>
-        <span><Icon name="CheckCircle2" size={15} />Wallet reminders</span>
-        <span><Icon name="CheckCircle2" size={15} />Member news</span>
+      <div className={s.channelPopupStats}>
+        <div>
+          <Icon name="Coins" size={25} />
+          <small>Minimum Deposit</small>
+          <strong>500</strong>
+        </div>
+        <div>
+          <Icon name="ArrowUpRight" size={25} />
+          <small>Minimum Withdraw</small>
+          <strong>200</strong>
+        </div>
+        <div>
+          <Icon name="Clock" size={25} />
+          <small>Launching Date</small>
+          <strong>14 November</strong>
+        </div>
       </div>
       <a
         className={s.channelPopupCta}
@@ -225,12 +241,13 @@ function ChannelPopup({ close }) {
         target="_blank"
         rel="noreferrer"
       >
-        <Icon name="MessageSquare" size={19} />
-        Follow our WhatsApp channel
+        <Icon name="MessageSquare" size={25} />
+        <strong>Join Our WhatsApp Channel</strong>
         <Icon name="ExternalLink" size={16} />
       </a>
       <button className={s.channelPopupContinue} onClick={close}>
         Continue to dashboard
+        <Icon name="ArrowRight" size={16} />
       </button>
     </Modal>
   );
