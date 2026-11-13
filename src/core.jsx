@@ -335,7 +335,7 @@ export function Load({ state, children }) {
 export function Mark() {
   return (
     <span className={s.brandMark}>
-      <Icon name="Network" size={24} />
+      <img src="/logo.jpeg" alt="" />
     </span>
   );
 }
