@@ -184,28 +184,6 @@ export function Overview() {
               </Link>
             </div>
           </div>
-          <div className={s.quickGrid}>
-            <ActionCard
-              to="/plans"
-              icon="Layers"
-              title="Find your plan"
-              description="A collection of 12 possibilities"
-            />
-            <ActionCard
-              to="/earnings"
-              icon="TrendingUp"
-              title="Follow your progress"
-              description="Every automatic credit, recorded"
-              tone="neutral"
-            />
-            <ActionCard
-              to="/team"
-              icon="Network"
-              title="Grow your network"
-              description="Connections across three levels"
-              tone="sand"
-            />
-          </div>
         </>
       )}
     </Load>
@@ -404,7 +382,7 @@ export function Plans() {
           </div>
         )}
       </Load>
-      <Info>
+      <Info className={s.pageFooterSpace}>
         The final daily credit adjusts by a few paisa where needed, so your
         total matches the amount shown exactly.
       </Info>
@@ -497,7 +475,7 @@ export function PlanDetail() {
                   <Icon name="Plus" size={14} />
                 </Link>
               </Card>
-              <Info>
+              <Info className={s.teamFooterSpace}>
                 Day 1 is included in the 45 credits. Your next earning is due 24
                 hours after purchase.
               </Info>
@@ -863,7 +841,7 @@ export function Team() {
                   />
                 )}
               </Card>
-              <Info>
+              <Info className={s.teamFooterSpace}>
                 Commissions are credited only when a deposit is approved. Daily
                 plan earnings do not generate team commissions.
               </Info>

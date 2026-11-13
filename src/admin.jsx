@@ -29,14 +29,41 @@ import {
 } from "./core";
 import { Detail } from "./member";
 const WalletChart = lazy(() => import("./WalletChart"));
+function OverviewMetric({ label, value, to, emphasis = false }) {
+  const content = (
+    <div className={`${s.adminOverviewMetric} ${emphasis ? s.adminOverviewMetricEmphasis : ""}`}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      {to && <Icon name="ChevronRight" size={18} />}
+    </div>
+  );
+  return to ? <Link to={to}>{content}</Link> : content;
+}
+
+function RegistrationTrend({ data }) {
+  const points = data.length
+    ? data
+    : Array.from({ length: 7 }, (_, index) => ({ date: String(index), count: 0 }));
+  const max = Math.max(...points.map((point) => point.count), 1);
+  return (
+    <div className={s.registrationTrend} aria-label="User registrations for the last seven days">
+      {points.map((point) => (
+        <div key={point.date}>
+          <i style={{ height: `${Math.max(8, (point.count / max) * 100)}%` }} />
+          <small>{point.date.slice(5)}</small>
+        </div>
+      ))}
+    </div>
+  );
+}
 export function AdminOverview() {
   const state = useData("/admin/overview", 15000);
   return (
     <>
       <Heading
-        eyebrow="ROBOTNETWORK · OPERATIONS CONSOLE"
-        title="Everything, in perspective."
-        description="A considered view of your members, money movements, and requests."
+        eyebrow="SUPER ADMIN"
+        title="Platform overview"
+        description="Monitor accounts, requests, rewards and platform activity."
         action={
           <button className={s.secondary} onClick={state.reload}>
             <Icon name="RefreshCw" size={16} />
@@ -47,61 +74,39 @@ export function AdminOverview() {
       <Load state={state}>
         {(d) => (
           <>
-            <div className={s.adminHero}>
-              <div>
-                <span className={s.eyebrow}>TODAY’S PRIORITIES</span>
-                <h2>
-                  {d.pendingDeposits + d.pendingWithdrawals
-                    ? `${d.pendingDeposits + d.pendingWithdrawals} requests need your attention.`
-                    : "A little clarity. Everything is up to date."}
-                </h2>
-                <p>
-                  Manual reviews keep every transfer verified and every member
-                  informed.
-                </p>
+            <section className={s.adminOverviewSection}>
+              <SectionTitle title="Today’s activity" description="TODAY · PAKISTAN TIME" />
+              <div className={s.adminTodayGrid}>
+                <OverviewMetric label="Today deposit" value={currency(d.today.deposits)} to="/admin/deposits" />
+                <OverviewMetric label="Today withdrawal" value={currency(d.today.withdrawals)} to="/admin/withdrawals" />
+                <OverviewMetric label="Today investment" value={currency(d.today.investment)} />
+                <OverviewMetric label="Today user joined" value={d.today.users} to="/admin/users" />
               </div>
-              <div className={s.adminHeroActions}>
-                <Link className={s.heroPrimary} to="/admin/deposits">
-                  Review deposits<span>{d.pendingDeposits}</span>
-                </Link>
-                <Link className={s.heroSecondary} to="/admin/withdrawals">
-                  Withdrawals<span>{d.pendingWithdrawals}</span>
-                </Link>
+            </section>
+            <section className={s.adminOverviewSection}>
+              <SectionTitle title="Platform finances" description="ALL-TIME TOTALS" />
+              <div className={s.adminFinanceGrid}>
+                <OverviewMetric label="Total deposit" value={currency(d.totals.deposits)} />
+                <OverviewMetric label="Total withdrawal" value={currency(d.totals.withdrawals)} />
+                <OverviewMetric label="Total earnings paid" value={currency(d.totals.earnings)} />
+                <OverviewMetric label="Total commissions" value={currency(d.totals.commissions)} />
+                <OverviewMetric label="Platform balance" value={currency(d.balances.deposits + d.balances.withdrawable)} emphasis />
               </div>
-            </div>
-            <div className={s.statsGrid}>
-              <Stat
-                label="Total members"
-                value={d.users}
-                icon="Users"
-                note={`${d.activePlans} active plans`}
-              />
-              <Stat
-                label="Deposit balances"
-                value={currency(d.balances.deposits)}
-                icon="Wallet"
-                note="Locked member funds"
-              />
-              <Stat
-                label="Withdrawable balances"
-                value={currency(d.balances.withdrawable)}
-                icon="TrendingUp"
-                note="Member earnings & commissions"
-                tone="sand"
-              />
-              <Stat
-                label="Awaiting review"
-                value={d.pendingDeposits + d.pendingWithdrawals}
-                icon="Clock"
-                tone="neutral"
-                note={`${d.pendingDeposits} deposits · ${d.pendingWithdrawals} withdrawals`}
-              />
-            </div>
+            </section>
+            <section className={s.adminOverviewSection}>
+              <SectionTitle title="Operations at a glance" description="LIVE PLATFORM TOTALS" />
+              <div className={s.adminOperationsGrid}>
+                <OverviewMetric label="Registered users" value={d.users} to="/admin/users" />
+                <OverviewMetric label="Active paid plans" value={d.activePlans} />
+                <OverviewMetric label="Pending deposits" value={d.pendingDeposits} to="/admin/deposits" />
+                <OverviewMetric label="Pending withdrawals" value={d.pendingWithdrawals} to="/admin/withdrawals" />
+              </div>
+            </section>
             <div className={s.adminDashboardGrid}>
               <Card>
                 <SectionTitle
-                  title="A view of the movement"
-                  description="Approved deposits and net withdrawal reservations · Last 30 days"
+                  title="Approved cash activity"
+                  description="LAST 30 DAYS · DEPOSITS AND WITHDRAWALS"
                   action={<Badge status="PKR" />}
                 />
                 {d.chart.length ? (
@@ -120,46 +125,12 @@ export function AdminOverview() {
                   />
                 )}
               </Card>
-              <Card className={s.adminShortcuts}>
+              <Card>
                 <SectionTitle
-                  title="Your control center"
-                  description="The details, a little closer."
+                  title="User registrations"
+                  description="LAST 7 DAYS"
                 />
-                {[
-                  [
-                    "/admin/users",
-                    "Users",
-                    "Member directory",
-                    "Review accounts and wallet balances",
-                  ],
-                  [
-                    "/admin/transactions",
-                    "History",
-                    "Transaction ledger",
-                    "Every financial movement",
-                  ],
-                  [
-                    "/admin/reports",
-                    "BarChart3",
-                    "Platform reports",
-                    "Balances, earnings, and cycles",
-                  ],
-                  [
-                    "/admin/tickets",
-                    "LifeBuoy",
-                    "Support inbox",
-                    "Reply to member questions",
-                  ],
-                ].map(([to, icon, title, description]) => (
-                  <Link key={to} className={s.linkRow} to={to}>
-                    <Tile icon={icon} />
-                    <div>
-                      <strong>{title}</strong>
-                      <small>{description}</small>
-                    </div>
-                    <Icon name="ChevronRight" size={15} />
-                  </Link>
-                ))}
+                <RegistrationTrend data={d.registrations} />
               </Card>
             </div>
           </>

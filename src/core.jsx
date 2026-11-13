@@ -348,13 +348,11 @@ const memberNav = [
 const adminNav = [
   ["/admin", "Overview", "LayoutDashboard"],
   ["/admin/users", "Members", "Users"],
-  ["/admin/plans", "Plan collection", "Layers"],
   ["/admin/deposits", "Deposit requests", "ArrowDownLeft"],
   ["/admin/withdrawals", "Withdrawal requests", "ArrowUpRight"],
   ["/admin/transactions", "Transaction ledger", "History"],
   ["/admin/commissions", "Commissions", "Network"],
   ["/admin/reports", "Reports", "BarChart3"],
-  ["/admin/content", "Website content", "Globe"],
   ["/admin/tickets", "Support inbox", "MessageSquare"],
   ["/admin/settings", "Payment settings", "Settings"],
 ];
@@ -559,7 +557,7 @@ export function Shell({ admin = false }) {
       </div>
       <nav className={s.mobileNav} aria-label="Mobile navigation" inert={compact && open}>
         {(admin
-          ? [adminNav[0], adminNav[1], adminNav[3], adminNav[4]]
+          ? [adminNav[0], adminNav[1], adminNav[2], adminNav[3]]
           : [memberNav[0], memberNav[1], memberNav[2], memberNav[4]]
         ).map(([path, label, icon]) => (
           <NavLink
@@ -689,9 +687,9 @@ export function Stat({ label, value, icon = "Wallet", note, tone = "green" }) {
     </Card>
   );
 }
-export function Info({ children, icon = "ShieldCheck", tone = "" }) {
+export function Info({ children, icon = "ShieldCheck", tone = "", className = "" }) {
   return (
-    <div className={`${s.info} ${tone ? s.infoWarning : ""}`}>
+    <div className={`${s.info} ${tone ? s.infoWarning : ""} ${className}`}>
       <Icon name={icon} size={18} />
       <div>{children}</div>
     </div>
