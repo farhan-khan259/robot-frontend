@@ -8990,6 +8990,37 @@ a .adminOverviewMetric:hover {
 .authForm input { font-size: 16px; }
 .authSwitch { color: #637469; font-size: 13px; }
 .authSecurity { color: #637469; font-size: 12px; }
+.authModeSwitch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 5px;
+  border: 1px solid #dfe8d9;
+  border-radius: 16px;
+  background: #e9eee8;
+}
+.authModeSwitch a {
+  display: grid;
+  min-height: 52px;
+  place-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #586c5c;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+.authModeSwitch a:hover {
+  color: #324a38;
+}
+.authModeSwitch .authModeActive {
+  color: #fff !important;
+  background: #5c7057;
+  box-shadow: 0 4px 10px #5c70572e;
+}
 @media (min-width: 1700px) {
   .planGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
@@ -9311,5 +9342,8 @@ a .adminOverviewMetric:hover {
   }
   .adminListTable .tableActions {
     min-width: 220px;
+  }
+  .content {
+    padding-bottom: calc(170px + env(safe-area-inset-bottom));
   }
 }

@@ -200,12 +200,16 @@ export function Auth({ register = false, admin = false }) {
       </section>
       <section className={s.authPanel}>
         <div className={s.authForm}>
-          <span className={s.authIcon}>
-            <Icon
-              name={admin ? "ShieldCheck" : register ? "Sparkles" : "Leaf"}
-              size={28}
-            />
-          </span>
+          {!admin && (
+            <div className={s.authModeSwitch} aria-label="Authentication mode">
+              <Link className={!register ? s.authModeActive : ""} to="/login">
+                Sign in
+              </Link>
+              <Link className={register ? s.authModeActive : ""} to="/register">
+                Create account
+              </Link>
+            </div>
+          )}
           <span className={s.eyebrow}>
             {admin
               ? "ADMINISTRATOR SIGN-IN"
@@ -213,13 +217,7 @@ export function Auth({ register = false, admin = false }) {
                 ? "A NEW BEGINNING"
                 : "YOUR PERSONAL WORKSPACE"}
           </span>
-          <h1>
-            {admin
-              ? "Welcome to operations."
-              : register
-                ? "Let’s begin your next chapter."
-                : "Good to see you again."}
-          </h1>
+          {admin && <h1>Welcome to operations.</h1>}
           <p>
             {admin
               ? "Sign in with your administrator account."
@@ -246,11 +244,11 @@ export function Auth({ register = false, admin = false }) {
                 />
               )}
               <Field
-                label="Email address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                maxLength={160}
+                label={admin ? "Email address" : "Phone number"}
+                name={admin ? "email" : "phone"}
+                type={admin ? "email" : "tel"}
+                autoComplete={admin ? "email" : "tel"}
+                maxLength={admin ? 160 : 24}
                 required
               />
               <Field
@@ -309,14 +307,6 @@ export function Auth({ register = false, admin = false }) {
                 <Icon name="ArrowRight" size={17} />
               </button>
             </form>
-          )}
-          {!admin && (
-            <div className={s.authSwitch}>
-              {register ? "Already have a workspace?" : "A new chapter ahead?"}
-              <Link to={register ? "/login" : "/register"}>
-                {register ? "Sign in" : "Create an account"}
-              </Link>
-            </div>
           )}
           <div className={s.authSecurity}>
             <Icon name="Lock" size={14} />
