@@ -568,103 +568,82 @@ export function Reviews({ type }) {
         {(d) => (
           <>
             {d.items.length ? (
-              <div className={s.reviewGrid}>
-                {d.items.map((x) => (
-                  <Card key={x._id} className={s.reviewCard}>
-                    <div className={s.sectionHead}>
-                      <div className={s.inline}>
-                        <Avatar name={x.user?.name} />
-                        <div>
-                          <h3>{x.user?.name || "Member"}</h3>
-                          <small>{x.user?.email}</small>
-                        </div>
-                      </div>
-                      <Badge status={x.status} />
-                    </div>
-                    <div className={s.reviewAmount}>
-                      <span>
-                        {type === "deposits"
-                          ? "DEPOSIT REQUEST"
-                          : "WITHDRAWAL REQUEST"}
-                      </span>
-                      <strong>{currency(x.amount)}</strong>
-                    </div>
-                    <div className={s.reviewReference}>Reference {x._id}</div>
-                    <div className={s.detailRows}>
-                      <Detail label="Submitted" value={date(x.createdAt)} />
-                      {type === "deposits" ? (
-                        <Detail label="Transaction ID" value={x.tid} />
-                      ) : (
-                        <>
-                          <Detail
-                            label="Institution"
-                            value={
-                              x.customInstitution ||
-                              banks.data?.find((b) => b.id === x.institution)
-                                ?.name ||
-                              x.institution
-                            }
-                          />
-                          <Detail label="Account title" value={x.accountName} />
-                          <Detail
-                            label="Account / IBAN"
-                            value={x.accountNumber}
-                          />
-                        </>
-                      )}
-                      {x.reviewedAt && (
-                        <Detail label="Reviewed" value={date(x.reviewedAt)} />
-                      )}
-                    </div>
-                    {x.note && (
-                      <div className={s.reviewNoteBox}>
-                        <span>Review note</span>
-                        <p>{x.note}</p>
-                      </div>
-                    )}
-                    {type === "deposits" && (
-                      <button
-                        className={s.receiptButton}
-                        onClick={() => viewReceipt(x._id)}
-                      >
-                        <Icon name="FileText" size={18} />
-                        <span>
-                          Payment receipt<small>Open submitted proof</small>
-                        </span>
-                        <Icon name="ExternalLink" size={16} />
-                      </button>
-                    )}
-                    {x.status === "pending" && (
-                      <div className={s.reviewActions}>
-                        <button
-                          className={s.primary}
-                          onClick={() => {
-                            setSelected(x);
-                            setAction(
-                              type === "deposits" ? "approved" : "paid",
-                            );
-                            setError("");
-                          }}
-                        >
-                          <Icon name="Check" size={16} />
-                          {type === "deposits"
-                            ? "Approve deposit"
-                            : "Mark payment complete"}
-                        </button>
-                        <button
-                          className={s.rejectButton}
-                          onClick={() => {
-                            setSelected(x);
-                            setAction("rejected");
-                            setError("");
-                          }}
-                        >
-                          Reject request
-                        </button>
-                      </div>
-                    )}
-                  </Card>
-                ))}
+              <div className={s.reviewTableWrap}>
+                <table className={s.adminListTable}>
+                  <thead>
+                    <tr>
+                      <th>Member</th>
+                      <th>Status</th>
+                      <th>Amount</th>
+                      <th>Submitted</th>
+                      <th>{type === "deposits" ? "Transaction ID" : "Destination"}</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {d.items.map((x) => (
+                      <tr key={x._id}>
+                        <td>
+                          <div className={s.tablePerson}>
+                            <Avatar name={x.user?.name} />
+                            <span>
+                              <strong>{x.user?.name || "Member"}</strong>
+                              <small>{x.user?.email}</small>
+                            </span>
+                          </div>
+                        </td>
+                        <td><Badge status={x.status} /></td>
+                        <td><strong>{currency(x.amount)}</strong></td>
+                        <td>{date(x.createdAt)}</td>
+                        <td>
+                          {type === "deposits" ? (
+                            <span className={s.monoValue}>{x.tid}</span>
+                          ) : (
+                            <span className={s.destinationValue}>
+                              {x.customInstitution ||
+                                banks.data?.find((b) => b.id === x.institution)?.name ||
+                                x.institution}
+                              <small>{x.accountName} · {x.accountNumber}</small>
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <div className={s.tableActions}>
+                            {type === "deposits" && (
+                              <button className={s.smallButton} onClick={() => viewReceipt(x._id)}>
+                                Receipt
+                              </button>
+                            )}
+                            {x.status === "pending" && (
+                              <>
+                                <button
+                                  className={s.smallButton}
+                                  onClick={() => {
+                                    setSelected(x);
+                                    setAction(type === "deposits" ? "approved" : "paid");
+                                    setError("");
+                                  }}
+                                >
+                                  {type === "deposits" ? "Approve" : "Mark paid"}
+                                </button>
+                                <button
+                                  className={s.dangerButton}
+                                  onClick={() => {
+                                    setSelected(x);
+                                    setAction("rejected");
+                                    setError("");
+                                  }}
+                                >
+                                  Reject
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             ) : (
               <Card>
