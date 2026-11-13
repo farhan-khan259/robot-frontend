@@ -123,8 +123,7 @@ export function Welcome() {
 }
 export function Auth({ register = false, admin = false }) {
   const { user, login, notify, logout } = useApp(),
-    navigate = useNavigate(),
-    useAdminStyle = admin || !register;
+    navigate = useNavigate();
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [show, setShow] = useState(false);
@@ -158,7 +157,7 @@ export function Auth({ register = false, admin = false }) {
     }
   }
   return (
-    <div className={`${s.auth} ${useAdminStyle ? s.adminAuth : ""}`}>
+    <div className={`${s.auth} ${s.adminAuth}`}>
       <section className={s.authStory}>
         <Brand admin={admin} />
         <div>
