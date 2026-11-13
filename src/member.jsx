@@ -31,6 +31,19 @@ import {
   InstitutionPicker,
   copyText,
 } from "./core";
+const planIcons = {
+  RN01: "Leaf",
+  RN02: "Sparkles",
+  RN03: "TrendingUp",
+  RN04: "Zap",
+  RN05: "Coins",
+  RN06: "ShieldCheck",
+  RN07: "Network",
+  RN08: "BarChart3",
+  RN09: "Clock",
+  RN10: "Rocket",
+};
+const planIcon = (plan) => planIcons[plan.code] || "Layers";
 export function Overview() {
   const state = useData("/overview", 20000),
     content = useData("/public/content"),
@@ -262,7 +275,7 @@ export function usePurchase() {
       className={s.purchaseModal}
     >
       <div className={s.confirmPlan}>
-        <Tile icon="Layers" size="large" />
+        <Tile icon={planIcon(selected)} size="large" />
         <div>
           <span className={s.eyebrow}>{selected.code}</span>
           <h3>{selected.name}</h3>
@@ -307,16 +320,7 @@ export function PlanCard({ plan: p, onChoose }) {
   return (
     <Card className={s.planCard}>
       <div className={s.planCardTop}>
-        <Tile
-          icon={
-            p.price >= 2500000
-              ? "ShieldCheck"
-              : p.price >= 500000
-                ? "Sparkles"
-                : "Leaf"
-          }
-          tone={p.price >= 2500000 ? "sand" : "green"}
-        />
+        <Tile icon={planIcon(p)} tone={p.price >= 2500000 ? "sand" : "green"} />
         <span className={s.planCode}>{p.code}</span>
       </div>
       <div className={s.planCardName}>
@@ -474,7 +478,7 @@ export function PlanDetail() {
             </div>
             <aside>
               <Card className={s.stickyCard}>
-                <Tile icon="Layers" size="large" />
+                <Tile icon={planIcon(p)} size="large" />
                 <h2>Ready for what’s next?</h2>
                 <p>
                   Review your purchase once more before activating your plan.

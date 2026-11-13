@@ -56,6 +56,8 @@ import {
   Coins,
   Network,
   ChevronDown,
+  Zap,
+  Rocket,
 } from "lucide-react";
 import { api, currency, date } from "./api";
 import s from "./App.module.css";
@@ -159,6 +161,8 @@ const icons = {
   Coins,
   Network,
   ChevronDown,
+  Zap,
+  Rocket,
 };
 export function Icon({ name, size = 19, ...props }) {
   const Component = icons[name] || Leaf;
