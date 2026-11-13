@@ -1554,7 +1554,7 @@ export function Account() {
         <div>
           <span className={s.eyebrow}>ROBOTNETWORK MEMBER</span>
           <h2>{user.name}</h2>
-          <p>{user.email}</p>
+          <p>{user.phone || "Phone number not added"}</p>
           <Badge status="active" />
         </div>
         <div className={s.profileSince}>
@@ -1758,7 +1758,7 @@ export function Profile() {
             </label>
           </div>
           <h2>{user.name}</h2>
-          <p>{user.email}</p>
+          <p>{user.phone || "Phone number not added"}</p>
           {photo && (
             <button
               type="button"
@@ -1785,13 +1785,6 @@ export function Profile() {
               defaultValue={user.name}
               required
               maxLength={160}
-            />
-            <Field
-              label="Email address"
-              type="email"
-              value={user.email}
-              readOnly
-              hint="Your sign-in email is kept unchanged."
             />
             <Field
               label="Phone number"
@@ -2208,7 +2201,7 @@ export function TicketThread({ admin = false }) {
           <Card className={s.threadCard}>
             {admin && (
               <Info>
-                {t.user?.name} · {t.user?.email}
+                {t.user?.name}
               </Info>
             )}
             <div className={s.messages}>

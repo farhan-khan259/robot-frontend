@@ -530,7 +530,7 @@ export function Shell({ admin = false }) {
             <Avatar name={user.name} src={user.avatar} />
             <span>
               <strong>{user.name}</strong>
-              <small>{user.email}</small>
+              <small>{admin ? "Administrator" : user.phone || "Member account"}</small>
             </span>
           </Link>
         </div>
