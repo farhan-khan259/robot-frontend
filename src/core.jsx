@@ -371,6 +371,30 @@ const adminNav = [
   ["/admin/tickets", "Support inbox", "MessageSquare"],
   ["/admin/settings", "Payment settings", "Settings"],
 ];
+export function SettingsMenu({ admin = false }) {
+  const routes = admin ? adminNav : memberNav;
+  return (
+    <>
+      <Heading
+        eyebrow={admin ? "ADMINISTRATION" : "YOUR WORKSPACE"}
+        title="Settings"
+        description="Open any area of your workspace from one place."
+      />
+      <Card>
+        {routes.map(([path, label, icon]) => (
+          <Link className={s.listLink} to={path} key={path}>
+            <Tile icon={icon} />
+            <div>
+              <strong>{label}</strong>
+              <small>Open {label.toLowerCase()}</small>
+            </div>
+            <Icon name="ChevronRight" size={17} />
+          </Link>
+        ))}
+      </Card>
+    </>
+  );
+}
 export function Shell({ admin = false }) {
   const { user, refresh, logout, notify, returnToAdmin } = useApp(),
     location = useLocation();
@@ -607,10 +631,13 @@ export function Shell({ admin = false }) {
             </span>
           </NavLink>
         ))}
-        <button onClick={() => setOpen(!open)} aria-label="More navigation" aria-expanded={open} aria-controls="workspace-navigation">
-          <Icon name="Menu" size={20} />
-          <span>More</span>
-        </button>
+        <Link
+          to={admin ? "/admin/menu" : "/settings"}
+          aria-label="Open settings"
+        >
+          <Icon name="Settings" size={20} />
+          <span>Settings</span>
+        </Link>
       </nav>
     </div>
   );

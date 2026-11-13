@@ -9278,6 +9278,15 @@ a .adminOverviewMetric:hover {
 }
 
 @media (max-width: 760px) {
+  .menuButton {
+    display: none;
+  }
+  .topbarLeft {
+    gap: 0;
+  }
+  .topbarActions {
+    margin-left: auto;
+  }
   .content,
   .card,
   .heading,

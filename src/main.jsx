@@ -5,7 +5,7 @@ import "@fontsource/inter/latin-700.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Provider, useApp, Shell, s, Icon } from "./core";
+import { Provider, useApp, Shell, SettingsMenu, s, Icon } from "./core";
 import { Auth, ForgotPassword, NotFound } from "./public";
 import {
   Overview,
@@ -70,6 +70,7 @@ function Router() {
         <Route path="support" element={<Support />} />
         <Route path="support/:id" element={<TicketThread />} />
         <Route path="faq" element={<FAQ />} />
+        <Route path="settings" element={<SettingsMenu />} />
       </Route>
       <Route
         element={
@@ -98,6 +99,7 @@ function Router() {
         <Route path="admin/tickets" element={<AdminTickets />} />
         <Route path="admin/tickets/:id" element={<TicketThread admin />} />
         <Route path="admin/settings" element={<PaymentSettings />} />
+        <Route path="admin/menu" element={<SettingsMenu admin />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
