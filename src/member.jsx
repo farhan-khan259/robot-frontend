@@ -303,7 +303,11 @@ export function usePurchase() {
     }
   }
   const modal = selected ? (
-    <Modal title="A new chapter starts here." close={close}>
+    <Modal
+      title="A new chapter starts here."
+      close={close}
+      className={s.purchaseModal}
+    >
       <div className={s.confirmPlan}>
         <Tile icon="Layers" size="large" />
         <div>

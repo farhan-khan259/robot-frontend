@@ -451,8 +451,6 @@ export function Shell({ admin = false }) {
               <Icon name="Menu" size={23} />
             </button>
             <span className={s.breadcrumb}>
-              {admin ? "Administration" : "Member workspace"}
-              <Icon name="ChevronRight" size={13} />
               <b>{current?.[1] || "Details"}</b>
             </span>
           </div>
@@ -711,7 +709,7 @@ export function Pager({ data, page, setPage }) {
     </div>
   ) : null;
 }
-export function Modal({ title, close, children, wide = false }) {
+export function Modal({ title, close, children, wide = false, className = "" }) {
   const ref = useRef();
   useEffect(() => {
     const prior = document.activeElement,
@@ -748,7 +746,7 @@ export function Modal({ title, close, children, wide = false }) {
     <div className={s.modalBackdrop} onMouseDown={close}>
       <section
         ref={ref}
-        className={`${s.modal} ${wide ? s.modalWide : ""}`}
+        className={`${s.modal} ${wide ? s.modalWide : ""} ${className}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}

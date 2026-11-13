@@ -8896,6 +8896,35 @@
   .authSwitch { font-size: 13px; }
   .authSecurity { font-size: 11px; }
   .authBack { font-size: 12px; }
+  .modalBackdrop {
+    align-items: flex-end;
+    padding: 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+  .modal {
+    max-height: calc(100dvh - 20px - env(safe-area-inset-bottom));
+    padding: 20px 16px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modalHead {
+    position: sticky;
+    top: -20px;
+    z-index: 2;
+    margin: -20px -16px 18px;
+    padding: 20px 16px 12px;
+    background: #fff;
+    border-bottom: 1px solid #edf2e7;
+  }
+  .modalHead h2 { font-size: 24px; }
+  .purchaseModal > .primary {
+    position: sticky;
+    bottom: -20px;
+    z-index: 2;
+    margin-top: 14px;
+    padding-block: 13px;
+    box-shadow: 0 -10px 18px #ffffffeb, 0 4px 10px #5c705728;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
