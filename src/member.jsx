@@ -962,7 +962,10 @@ export function DepositPage() {
                     Transfer only the amount you submit. You’ll add your
                     transaction ID and screenshot in the next step.
                   </Info>
-                  <button className={s.primary}>
+                  <button
+                    className={s.primary}
+                    disabled={Number(amount) < 500}
+                  >
                     Continue to transfer details
                     <Icon name="ArrowRight" size={17} />
                   </button>
@@ -1190,7 +1193,7 @@ export function WithdrawPage() {
                     <Icon name="Clock" size={13} />
                     Open 24/7
                   </span>
-                  <span>Minimum Rs 100</span>
+                  <span>Minimum Rs 200</span>
                 </div>
                 <Orbit small />
               </section>
@@ -1229,7 +1232,7 @@ export function WithdrawPage() {
                             aria-label="Withdrawal amount"
                             type="number"
                             name="amount"
-                            min="100"
+                            min="200"
                             max={d.user.withdrawableBalance / 100}
                             step="0.01"
                             required
@@ -1285,15 +1288,15 @@ export function WithdrawPage() {
                         className={s.primary}
                         disabled={
                           d.activePlans === 0 ||
-                          d.user.withdrawableBalance < 10000
+                          d.user.withdrawableBalance < 20000
                         }
                       >
                         Review withdrawal
                         <Icon name="ArrowUpRight" size={17} />
                       </button>
-                      {d.user.withdrawableBalance < 10000 && (
+                      {d.user.withdrawableBalance < 20000 && (
                         <p className={s.formFootnote}>
-                          You need at least Rs 100 in your withdrawable wallet.
+                          You need at least Rs 200 in your withdrawable wallet.
                         </p>
                       )}
                     </form>
@@ -1313,7 +1316,7 @@ export function WithdrawPage() {
                   nominated account manually.
                 </p>
                 <div className={s.detailRows}>
-                  <Detail label="Minimum amount" value="Rs 100" />
+                  <Detail label="Minimum amount" value="Rs 200" />
                   <Detail label="Eligibility" value="An active plan" />
                   <Detail label="Source wallet" value="Withdrawable only" />
                 </div>
