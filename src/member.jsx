@@ -42,6 +42,8 @@ const planIcons = {
   RN08: "BarChart3",
   RN09: "Clock",
   RN10: "Rocket",
+  RN11: "Crown",
+  RN12: "Gem",
 };
 const planIcon = (plan) => planIcons[plan.code] || "Layers";
 export function Overview() {
