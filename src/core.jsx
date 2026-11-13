@@ -61,6 +61,7 @@ import {
   Rocket,
   Crown,
   Gem,
+  Camera,
 } from "lucide-react";
 import { api, currency, date } from "./api";
 import s from "./App.module.css";
@@ -168,6 +169,7 @@ const icons = {
   Rocket,
   Crown,
   Gem,
+  Camera,
 };
 export function Icon({ name, size = 19, ...props }) {
   const Component = icons[name] || Leaf;
@@ -525,7 +527,7 @@ export function Shell({ admin = false }) {
             to={admin ? "/admin/settings" : "/account"}
             className={s.sidebarProfile}
           >
-            <Avatar name={user.name} />
+            <Avatar name={user.name} src={user.avatar} />
             <span>
               <strong>{user.name}</strong>
               <small>{user.email}</small>
@@ -572,7 +574,7 @@ export function Shell({ admin = false }) {
               to={admin ? "/admin/settings" : "/account"}
               className={s.headerProfile}
             >
-              <Avatar name={user.name} />
+              <Avatar name={user.name} src={user.avatar} />
               <span>
                 <b>{user.name}</b>
                 <small>{admin ? "Administrator" : "Member account"}</small>
@@ -642,16 +644,48 @@ export function Shell({ admin = false }) {
     </div>
   );
 }
-export function Avatar({ name = "", large = false }) {
+export function Avatar({ name = "", src = "", large = false }) {
+  const [imageSrc, setImageSrc] = useState("");
+  useEffect(() => {
+    if (!src) {
+      setImageSrc("");
+      return undefined;
+    }
+    const controller = new AbortController();
+    let objectUrl = "";
+    fetch(src, {
+      headers: { Authorization: `Bearer ${sessionStorage.getItem("rn_token")}` },
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Unable to load profile photo");
+        return response.blob();
+      })
+      .then((blob) => {
+        objectUrl = URL.createObjectURL(blob);
+        setImageSrc(objectUrl);
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") setImageSrc("");
+      });
+    return () => {
+      controller.abort();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [src]);
   return (
     <span className={`${s.avatar} ${large ? s.avatarLarge : ""}`}>
-      {name
-        .trim()
-        .split(/\s+/)
-        .map((n) => n.charAt(0))
-        .slice(0, 2)
-        .join("")
-        .toUpperCase()}
+      {imageSrc ? (
+        <img src={imageSrc} alt="" />
+      ) : (
+        name
+          .trim()
+          .split(/\s+/)
+          .map((n) => n.charAt(0))
+          .slice(0, 2)
+          .join("")
+          .toUpperCase()
+      )}
     </span>
   );
 }

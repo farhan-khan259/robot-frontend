@@ -75,7 +75,7 @@ export function Overview() {
                   <Icon name={visible ? "Eye" : "EyeOff"} size={19} />
                 </button>
               </div>
-              <span className={s.heroLabel}>Withdrawable balance</span>
+              <span className={s.heroLabel}>Withdrawable wallet</span>
               <h2>
                 {visible ? currency(d.user.withdrawableBalance) : "••••••"}
               </h2>
@@ -451,7 +451,7 @@ export function PlanDetail() {
                   <Detail label="Purchase wallet" value="Deposit balance" />
                   <Detail
                     label="Earnings wallet"
-                    value="Withdrawable balance"
+                    value="Withdrawable wallet"
                   />
                 </div>
               </Card>
@@ -1550,7 +1550,7 @@ export function Account() {
         description="Your details, preferences, and everyday essentials."
       />
       <section className={s.profileHero}>
-        <Avatar name={user.name} large />
+        <Avatar name={user.name} src={user.avatar} large />
         <div>
           <span className={s.eyebrow}>ROBOTNETWORK MEMBER</span>
           <h2>{user.name}</h2>
@@ -1690,7 +1690,35 @@ function LinkRow({ to, icon, title, description }) {
 export function Profile() {
   const { user, refresh, notify } = useApp(),
     [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [photo, setPhoto] = useState(null),
+    [photoPreview, setPhotoPreview] = useState("");
+  useEffect(() => {
+    if (!photo) {
+      setPhotoPreview("");
+      return undefined;
+    }
+    const url = URL.createObjectURL(photo);
+    setPhotoPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [photo]);
+  async function savePhoto() {
+    if (!photo) return;
+    setBusy(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("avatar", photo);
+      await api("/me/avatar", { method: "POST", body });
+      setPhoto(null);
+      await refresh();
+      notify("Your profile photo has been saved.");
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   async function save(e) {
     e.preventDefault();
     setBusy(true);
@@ -1718,9 +1746,30 @@ export function Profile() {
       />
       <div className={s.profileLayout}>
         <Card className={s.profileSummary}>
-          <Avatar name={user.name} large />
+          <div className={s.profilePhotoEditor}>
+            <Avatar name={user.name} src={photoPreview || user.avatar} large />
+            <label className={s.profilePhotoButton} title="Change profile photo">
+              <Icon name="Camera" size={16} />
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+              />
+            </label>
+          </div>
           <h2>{user.name}</h2>
           <p>{user.email}</p>
+          {photo && (
+            <button
+              type="button"
+              className={s.secondary}
+              onClick={savePhoto}
+              disabled={busy}
+            >
+              {busy ? "Saving…" : "Save profile photo"}
+              <Icon name="Check" size={16} />
+            </button>
+          )}
           <div className={s.referralMini}>
             <span>{user.referralCode}</span>
             <Icon name="Network" size={17} />
