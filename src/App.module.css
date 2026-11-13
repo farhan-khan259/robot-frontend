@@ -9099,3 +9099,36 @@ a .adminOverviewMetric:hover {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+@media (max-width: 760px) {
+  .adminTodayGrid,
+  .adminOperationsGrid,
+  .adminFinanceGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .adminFinanceGrid > :last-child {
+    grid-column: 1 / -1;
+  }
+  .adminOverviewMetric {
+    min-height: 118px;
+    padding: 17px 15px;
+  }
+  .adminOverviewMetric > span {
+    padding-right: 13px;
+    font-size: 12px;
+  }
+  .adminOverviewMetric > strong {
+    font-size: 27px;
+  }
+  .adminOverviewMetric > svg {
+    right: 12px;
+    top: 17px;
+  }
+  .adminOverviewSection {
+    margin-bottom: 25px;
+  }
+  .adminDashboardGrid {
+    grid-template-columns: 1fr;
+  }
+}
