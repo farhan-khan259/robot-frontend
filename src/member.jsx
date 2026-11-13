@@ -28,6 +28,7 @@ import {
   ActionCard,
   Avatar,
   InstitutionMark,
+  InstitutionPicker,
   copyText,
 } from "./core";
 export function Overview() {
@@ -1263,27 +1264,13 @@ export function WithdrawPage() {
                         Use available balance
                       </button>
                       <Field label="Bank or wallet">
-                        <select
-                          name="institution"
+                        <InstitutionPicker
+                          institutions={banks}
                           value={bank}
-                          onChange={(e) => setBank(e.target.value)}
-                        >
-                          {banks.map((b) => (
-                            <option key={b.id} value={b.id}>
-                              {b.name}
-                            </option>
-                          ))}
-                        </select>
-                      </Field>
-                      {bank === "other" && (
-                        <Field
-                          label="Bank or wallet name"
-                          name="customInstitution"
-                          minLength={3}
-                          maxLength={160}
-                          required
+                          onChange={setBank}
                         />
-                      )}
+                        <input type="hidden" name="institution" value={bank} />
+                      </Field>
                       <div className={s.bankSelected}>
                         <InstitutionMark
                           institution={bank}

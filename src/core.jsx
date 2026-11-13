@@ -60,6 +60,9 @@ import {
 import { api, currency, date } from "./api";
 import s from "./App.module.css";
 export { s, currency, date };
+const institutionDomains = {
+  easypaisa: "easypaisa.com.pk", jazzcash: "jazzcash.com.pk", sadapay: "sadapay.pk", nayapay: "nayapay.com", zindigi: "zindigi.pk", upaisa: "upaisa.com", hblkonnect: "hbl.com", ublomni: "ubl.com.pk", alfawallet: "bankalfalah.com", keenu: "keenu.com", simsim: "simsim.com.pk", digikhata: "digikhata.pk", finja: "finja.pk", oneload: "oneload.com.pk", hbl: "hbl.com", ubl: "ubl.com.pk", mcb: "mcb.com.pk", meezan: "meezanbank.com", allied: "abl.com", alfalah: "bankalfalah.com", bankalhabib: "bankalhabib.com", askari: "askaribank.com", faysal: "faysalbank.com", standardchartered: "sc.com", nbp: "nbp.com.pk", bop: "bop.com.pk", bok: "bok.com.pk", sindh: "sindhbank.com.pk", soneri: "soneribank.com", js: "jsbl.com", habibmetro: "habibmetro.com", dubaiislamic: "dibpak.com", albaraka: "albaraka.com.pk", bankislami: "bankislami.com.pk", mcbislamic: "mcbislamicbank.com", firstwomen: "fwbl.com.pk", ztbl: "ztbl.com.pk", sme: "smebank.org", ppcb: "ppcbl.com.pk", citi: "citi.com", deutsche: "db.com", bankofchina: "bankofchina.com", icbc: "icbc.com.cn", easypaisabank: "easypaisa.com.pk", mashreq: "mashreq.com", raqami: "raqamidigital.com",
+};
 const institutionLogoSources = {
   easypaisa:
     "https://images.seeklogo.com/logo-png/51/1/easypaisa-logo-png_seeklogo-512220.png",
@@ -70,7 +73,7 @@ const institutionLogoSources = {
 };
 export function InstitutionMark({ institution, monogram, label }) {
   const [failed, setFailed] = useState(false);
-  const source = institutionLogoSources[institution];
+  const source = institutionLogoSources[institution] || (institutionDomains[institution] ? `https://www.google.com/s2/favicons?domain=${institutionDomains[institution]}&sz=128` : null);
   return (
     <span className={s.institutionMark} title={label || institution}>
       {source && !failed ? (
@@ -83,6 +86,28 @@ export function InstitutionMark({ institution, monogram, label }) {
         <span aria-hidden="true">{monogram || "PK"}</span>
       )}
     </span>
+  );
+}
+export function InstitutionPicker({ institutions, value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const selected = institutions.find((institution) => institution.id === value);
+  return (
+    <div className={s.institutionPicker}>
+      <button type="button" className={s.institutionPickerTrigger} onClick={() => setOpen((current) => !current)} aria-haspopup="listbox" aria-expanded={open}>
+        <InstitutionMark {...selected} institution={selected?.id} />
+        <span>{selected?.name || "Choose a bank or wallet"}</span>
+        <Icon name="ChevronDown" size={18} />
+      </button>
+      {open && <div className={s.institutionPickerMenu} role="listbox">
+        {institutions.map((institution) => (
+          <button type="button" role="option" aria-selected={institution.id === value} key={institution.id} className={institution.id === value ? s.institutionPickerActive : ""} onClick={() => { onChange(institution.id); setOpen(false); }}>
+            <InstitutionMark {...institution} institution={institution.id} />
+            <span>{institution.name}</span>
+            {institution.id === value && <Icon name="Check" size={17} />}
+          </button>
+        ))}
+      </div>}
+    </div>
   );
 }
 const icons = {
