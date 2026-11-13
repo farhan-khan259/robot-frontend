@@ -205,6 +205,7 @@ export function Provider({ children }) {
     else setReady(true);
     const expired = () => {
       sessionStorage.removeItem("rn_token");
+      sessionStorage.removeItem("rn_channel_popup_seen");
       setUser(null);
     };
     window.addEventListener("rn-session-expired", expired);
@@ -220,6 +221,7 @@ export function Provider({ children }) {
   }, [notice]);
   const login = (data) => {
     sessionStorage.setItem("rn_token", data.token);
+    sessionStorage.removeItem("rn_channel_popup_seen");
     setUser(data.user);
   };
   const logout = async () => {
@@ -228,6 +230,7 @@ export function Provider({ children }) {
     } catch {
     } finally {
       sessionStorage.removeItem("rn_token");
+      sessionStorage.removeItem("rn_channel_popup_seen");
       setUser(null);
     }
   };

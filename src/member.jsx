@@ -25,6 +25,7 @@ import {
   Modal,
   Transactions,
   Orbit,
+  Mark,
   ActionCard,
   Avatar,
   InstitutionMark,
@@ -46,15 +47,27 @@ const planIcons = {
   RN12: "Gem",
 };
 const planIcon = (plan) => planIcons[plan.code] || "Layers";
+const whatsappUrl = (number) => {
+  const digits = String(number || "").replace(/\D/g, "");
+  return `https://wa.me/${digits.startsWith("0") ? `92${digits.slice(1)}` : digits}`;
+};
 export function Overview() {
   const state = useData("/overview", 20000),
     content = useData("/public/content"),
     { notify } = useApp();
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(true),
+    [channelPopup, setChannelPopup] = useState(
+      () => sessionStorage.getItem("rn_channel_popup_seen") !== "1",
+    );
+  const closeChannelPopup = () => {
+    sessionStorage.setItem("rn_channel_popup_seen", "1");
+    setChannelPopup(false);
+  };
   return (
     <Load state={state}>
       {(d) => (
         <>
+          {channelPopup && <ChannelPopup close={closeChannelPopup} />}
           <Heading
             eyebrow="YOUR PERSONAL OVERVIEW"
             title={`Welcome back, ${d.user.name.split(" ")[0]}.`}
@@ -187,6 +200,39 @@ export function Overview() {
         </>
       )}
     </Load>
+  );
+}
+function ChannelPopup({ close }) {
+  return (
+    <Modal title="Stay connected with RobotNetwork" close={close} className={s.channelPopup}>
+      <div className={s.channelPopupHero}>
+        <Mark />
+        <span className={s.channelPopupBadge}>
+          <Icon name="CheckCircle2" size={14} />
+          Clear updates, in one place
+        </span>
+        <h2>A little more clarity.</h2>
+        <p>Follow our WhatsApp channel for short updates on your plans, wallet, and network.</p>
+      </div>
+      <div className={s.channelPopupPoints}>
+        <span><Icon name="CheckCircle2" size={15} />Plan updates</span>
+        <span><Icon name="CheckCircle2" size={15} />Wallet reminders</span>
+        <span><Icon name="CheckCircle2" size={15} />Member news</span>
+      </div>
+      <a
+        className={s.channelPopupCta}
+        href="https://whatsapp.com/channel/0029VbDtAc4HrDZdLMeIgo1v"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <Icon name="MessageSquare" size={19} />
+        Follow our WhatsApp channel
+        <Icon name="ExternalLink" size={16} />
+      </a>
+      <button className={s.channelPopupContinue} onClick={close}>
+        Continue to dashboard
+      </button>
+    </Modal>
   );
 }
 export function Announcement({ content }) {
@@ -2080,9 +2126,18 @@ export function Support() {
                     </a>
                   )}
                   {d.supportPhone && (
-                    <a href={`tel:${d.supportPhone}`}>
-                      <Icon name="Phone" size={17} />
-                      {d.supportPhone}
+                    <a
+                      className={s.whatsappSupportButton}
+                      href={whatsappUrl(d.supportPhone)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Icon name="MessageSquare" size={17} />
+                      <span>
+                        <strong>Chat on WhatsApp</strong>
+                        <small>{d.supportPhone}</small>
+                      </span>
+                      <Icon name="ExternalLink" size={16} />
                     </a>
                   )}
                 </div>
@@ -2273,10 +2328,15 @@ export function FAQ() {
                 things simpler.
               </h2>
               <p>Still have a question? Our support team can help.</p>
-              <Link className={s.primary} to="/support">
-                Contact support
-                <Icon name="ArrowRight" size={16} />
-              </Link>
+              <a
+                className={s.primary}
+                href="https://wa.me/923248008331"
+                target="_blank"
+                rel="noreferrer"
+              >
+                WhatsApp customer support
+                <Icon name="ExternalLink" size={16} />
+              </a>
             </aside>
             <div>
               {[...new Set(d.faqs.map((f) => f.category))].map((category) => (
