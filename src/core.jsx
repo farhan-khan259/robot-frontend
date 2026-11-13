@@ -228,6 +228,20 @@ export function Provider({ children }) {
       setUser(null);
     }
   };
+  const impersonate = async (memberId) => {
+    const adminToken = sessionStorage.getItem("rn_token");
+    const data = await api(`/admin/users/${memberId}/login`, { method: "POST" });
+    sessionStorage.setItem("rn_admin_return_token", adminToken);
+    login(data);
+  };
+  const returnToAdmin = async () => {
+    const adminToken = sessionStorage.getItem("rn_admin_return_token");
+    if (!adminToken) return;
+    sessionStorage.setItem("rn_token", adminToken);
+    sessionStorage.removeItem("rn_admin_return_token");
+    const restored = await api("/me");
+    setUser(restored);
+  };
   if (!ready)
     return (
       <div className={s.splash}>
@@ -238,7 +252,7 @@ export function Provider({ children }) {
       </div>
     );
   return (
-    <Context.Provider value={{ user, setUser, refresh, notify, login, logout }}>
+    <Context.Provider value={{ user, setUser, refresh, notify, login, logout, impersonate, returnToAdmin }}>
       {children}
       {notice && (
         <div
@@ -357,7 +371,7 @@ const adminNav = [
   ["/admin/settings", "Payment settings", "Settings"],
 ];
 export function Shell({ admin = false }) {
-  const { user, refresh, logout, notify } = useApp(),
+  const { user, refresh, logout, notify, returnToAdmin } = useApp(),
     location = useLocation();
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 800px)").matches);
@@ -542,6 +556,23 @@ export function Shell({ admin = false }) {
             </Link>
           </div>
         </header>
+        {!admin && sessionStorage.getItem("rn_admin_return_token") && (
+          <div className={s.impersonationBanner} role="status">
+            <span>
+              <Icon name="Eye" size={19} />
+              Viewing as <strong>{user.name}</strong> · Read-only admin access
+            </span>
+            <button
+              className={s.secondary}
+              onClick={async () => {
+                await returnToAdmin();
+                window.location.assign("/admin");
+              }}
+            >
+              Return to admin
+            </button>
+          </div>
+        )}
         <main id="main-content" className={s.content}>
           <Outlet />
         </main>

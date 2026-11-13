@@ -144,40 +144,62 @@ export function AdminUsers() {
     [q, setQ] = useState(""),
     [query, setQuery] = useState(""),
     [selected, setSelected] = useState(null),
+    [balanceAction, setBalanceAction] = useState(null),
+    [deleteUser, setDeleteUser] = useState(null),
     [busy, setBusy] = useState("");
   const state = useData(
       `/admin/users?page=${page}&q=${encodeURIComponent(query)}`,
       20000,
     ),
     detail = useData(selected ? `/admin/users/${selected._id}/detail` : null),
-    { notify } = useApp();
-  async function toggle(u) {
-    setBusy(u._id);
+    { notify, impersonate } = useApp();
+  async function loginAsMember(member) {
+    setBusy(member._id);
     try {
-      await api(`/admin/users/${u._id}`, {
-        method: "PATCH",
-        body: { blocked: !u.blocked },
-      });
-      state.reload();
-      notify(u.blocked ? "Member access restored." : "Member access blocked.");
+      await impersonate(member._id);
+      notify(`Opened ${member.name}'s member account.`);
     } catch (e) {
       notify(e.message, true);
     } finally {
       setBusy("");
     }
   }
+  async function adjustBalance(e) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    setBusy(balanceAction.user._id);
+    try {
+      await api(`/admin/users/${balanceAction.user._id}/balance`, {
+        method: "POST",
+        body: { wallet: form.get("wallet"), direction: balanceAction.direction, amount: Number(form.get("amount")) },
+      });
+      setBalanceAction(null);
+      state.reload();
+      notify("Member balance updated.");
+    } catch (e) { notify(e.message, true); } finally { setBusy(""); }
+  }
+  async function removeUser() {
+    setBusy(deleteUser._id);
+    try {
+      await api(`/admin/users/${deleteUser._id}`, { method: "DELETE" });
+      setDeleteUser(null);
+      setSelected(null);
+      state.reload();
+      notify("Member and related records deleted.");
+    } catch (e) { notify(e.message, true); } finally { setBusy(""); }
+  }
   return (
     <>
       <Heading
-        eyebrow="THE MEMBER DIRECTORY"
-        title="The people behind the progress."
-        description="Real accounts, clear balances, and thoughtful access controls."
+        eyebrow="MEMBER MANAGEMENT"
+        title="Your members, clearly managed."
+        description="Search accounts, manage access, and maintain member wallet balances."
       />
       <Card>
         <div className={s.tableToolbar}>
           <div>
-            <h2>Your members</h2>
-            <p>{state.data?.total ?? "—"} accounts in this view</p>
+            <h2>Member directory</h2>
+            <p>{state.data?.total ?? "—"} registered accounts</p>
           </div>
           <form
             className={s.searchForm}
@@ -192,6 +214,7 @@ export function AdminUsers() {
               aria-label="Search members by name or email"
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              placeholder="Search name or email"
               maxLength={160}
             />
             <button type="submit">Search</button>
@@ -206,10 +229,10 @@ export function AdminUsers() {
                     <thead>
                       <tr>
                         <th>Member</th>
-                        <th>Deposit wallet</th>
-                        <th>Withdrawable</th>
-                        <th>Access</th>
-                        <th>Manage</th>
+                        <th>Status</th>
+                        <th>Registered</th>
+                        <th>Balance</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -225,32 +248,23 @@ export function AdminUsers() {
                               </span>
                             </div>
                           </td>
-                          <td data-label="Deposit wallet">
-                            {currency(u.depositBalance)}
-                          </td>
-                          <td data-label="Withdrawable">
-                            {currency(u.withdrawableBalance)}
-                          </td>
-                          <td data-label="Access">
+                          <td data-label="Status">
                             <Badge status={u.blocked ? "blocked" : "active"} />
                           </td>
-                          <td data-label="Manage">
+                          <td data-label="Registered">{date(u.createdAt)}</td>
+                          <td data-label="Balance">{currency(u.depositBalance + u.withdrawableBalance)}</td>
+                          <td data-label="Actions">
                             <div className={s.tableActions}>
                               <button
-                                onClick={() => setSelected(u)}
+                                onClick={() => loginAsMember(u)}
                                 className={s.smallButton}
+                                disabled={busy === u._id}
                               >
-                                View details
+                                {busy === u._id ? "Opening…" : "Login"}
                               </button>
-                              {u.role === "member" && (
-                                <button
-                                  disabled={busy === u._id}
-                                  onClick={() => toggle(u)}
-                                  className={s.inlineButton}
-                                >
-                                  {u.blocked ? "Unblock" : "Block"}
-                                </button>
-                              )}
+                              <button onClick={() => setBalanceAction({ user: u, direction: "add" })} className={s.smallButton}>Add balance</button>
+                              <button onClick={() => setBalanceAction({ user: u, direction: "remove" })} className={s.smallButton}>Remove balance</button>
+                              <button onClick={() => setDeleteUser(u)} className={s.dangerButton}>Delete</button>
                             </div>
                           </td>
                         </tr>
@@ -333,6 +347,22 @@ export function AdminUsers() {
               </>
             )}
           </Load>
+        </Modal>
+      )}
+      {balanceAction && (
+        <Modal title={`${balanceAction.direction === "add" ? "Add" : "Remove"} balance`} close={() => setBalanceAction(null)}>
+          <form className={s.formStack} onSubmit={adjustBalance}>
+            <p className={s.muted}>{balanceAction.user.name}</p>
+            <Field label="Wallet"><select name="wallet" defaultValue="deposit"><option value="deposit">Deposit wallet</option><option value="withdrawable">Withdrawable wallet</option></select></Field>
+            <Field label="Amount in PKR"><input name="amount" type="number" min="0.01" step="0.01" required autoFocus /></Field>
+            <button className={s.primary} disabled={busy === balanceAction.user._id}>{busy ? "Saving…" : "Confirm adjustment"}</button>
+          </form>
+        </Modal>
+      )}
+      {deleteUser && (
+        <Modal title="Delete member?" close={() => setDeleteUser(null)}>
+          <p className={s.modalText}>This permanently deletes {deleteUser.name} and their related plans, payments, and transactions.</p>
+          <div className={s.modalActions}><button className={s.secondary} onClick={() => setDeleteUser(null)}>Cancel</button><button className={s.dangerButton} disabled={busy === deleteUser._id} onClick={removeUser}>Delete member</button></div>
         </Modal>
       )}
     </>

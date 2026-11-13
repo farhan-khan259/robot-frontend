@@ -424,6 +424,27 @@
   gap: 20px;
   background: #f9fcf6;
 }
+.impersonationBanner {
+  min-height: 58px;
+  padding: 10px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: #fff7dd;
+  border-bottom: 1px solid #ecdb9a;
+  color: #765913;
+  font-size: 13px;
+}
+.impersonationBanner > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.impersonationBanner .secondary {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+}
 .topbarLeft {
   display: flex;
   align-items: center;
@@ -3112,6 +3133,23 @@ a .adminOverviewMetric:hover {
   font-size: 10px;
   white-space: nowrap;
 }
+.dangerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 8px 12px;
+  border: 1px solid #efc4bd;
+  border-radius: 9px;
+  background: #fff7f5;
+  color: #b24d40;
+  font-size: 12px;
+  font-weight: 700;
+}
+.formStack { display: grid; gap: 16px; }
+.modalText { color: #637469; font-size: 13px; line-height: 1.7; }
+.modalActions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 .chart {
   width: 100%;
   min-width: 0;
@@ -9101,6 +9139,21 @@ a .adminOverviewMetric:hover {
 }
 
 @media (max-width: 760px) {
+  .impersonationBanner {
+    min-height: 0;
+    padding: 10px 16px;
+    align-items: flex-start;
+    font-size: 11px;
+  }
+  .impersonationBanner > span {
+    align-items: flex-start;
+    line-height: 1.45;
+  }
+  .impersonationBanner .secondary {
+    padding: 7px 9px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
   .adminTodayGrid,
   .adminOperationsGrid,
   .adminFinanceGrid {
