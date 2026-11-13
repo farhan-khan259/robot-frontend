@@ -124,7 +124,7 @@ export function Welcome() {
 export function Auth({ register = false, admin = false }) {
   const { user, login, notify, logout } = useApp(),
     navigate = useNavigate(),
-    useAdminStory = admin || !register;
+    useAdminStyle = admin || !register;
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [show, setShow] = useState(false);
@@ -158,17 +158,17 @@ export function Auth({ register = false, admin = false }) {
     }
   }
   return (
-    <div className={`${s.auth} ${useAdminStory ? s.adminAuth : ""}`}>
+    <div className={`${s.auth} ${useAdminStyle ? s.adminAuth : ""}`}>
       <section className={s.authStory}>
-        <Brand admin={useAdminStory} />
+        <Brand admin={admin} />
         <div>
           <span className={s.eyebrow}>
-            {useAdminStory
+            {admin
               ? "ROBOTNETWORK · ADMINISTRATION"
               : "A FRESH PERSPECTIVE"}
           </span>
           <h1>
-            {useAdminStory ? (
+            {admin ? (
               <>
                 Thoughtful oversight.
                 <br />A clearer picture.
@@ -181,7 +181,7 @@ export function Auth({ register = false, admin = false }) {
             )}
           </h1>
           <p>
-            {useAdminStory
+            {admin
               ? "Your members, payment reviews, and platform records. Connected in one dedicated operations workspace."
               : "A calm, considered space for your wallet, your plans, and the people in your network."}
           </p>
@@ -189,9 +189,9 @@ export function Auth({ register = false, admin = false }) {
             <Orbit />
           </div>
           <div className={s.authStoryFoot}>
-            <Icon name={useAdminStory ? "ShieldCheck" : "Leaf"} size={18} />
+            <Icon name={admin ? "ShieldCheck" : "Leaf"} size={18} />
             <span>
-              {useAdminStory
+              {admin
                 ? "YOUR DEDICATED OPERATIONS CONSOLE"
                 : "YOUR NEXT CHAPTER STARTS WITH CLARITY"}
             </span>
