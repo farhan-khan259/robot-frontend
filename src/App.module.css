@@ -9129,8 +9129,10 @@ a .adminOverviewMetric:hover {
     box-shadow: 0 -10px 18px #ffffffeb, 0 4px 10px #5c705728;
   }
   .purchaseModal {
-    height: calc(100dvh - 20px - env(safe-area-inset-bottom));
-    max-height: calc(100dvh - 20px - env(safe-area-inset-bottom));
+    /* Keep plan confirmation as a centered dialog on phones.  It can scroll
+       internally when the confirmation details are taller than the viewport. */
+    height: auto;
+    max-height: min(82dvh, calc(100dvh - 40px - env(safe-area-inset-bottom)));
     border-radius: 20px;
   }
 }
@@ -9172,7 +9174,7 @@ a .adminOverviewMetric:hover {
     font-size: 12px;
   }
   .adminOverviewMetric > strong {
-    font-size: 27px;
+    font-size: 20px;
   }
   .adminOverviewMetric > svg {
     right: 12px;

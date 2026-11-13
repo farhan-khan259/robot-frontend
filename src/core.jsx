@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
+import { createPortal } from "react-dom";
 import { Link, NavLink, Outlet, useLocation, Navigate } from "react-router-dom";
 import {
   ArrowUpRight,
@@ -831,7 +832,7 @@ export function Modal({ title, close, children, wide = false, className = "" }) 
       prior?.focus?.();
     };
   }, [close]);
-  return (
+  return createPortal(
     <div className={s.modalBackdrop} onMouseDown={close}>
       <section
         ref={ref}
@@ -854,6 +855,8 @@ export function Modal({ title, close, children, wide = false, className = "" }) 
         {children}
       </section>
     </div>
+    ,
+    document.body,
   );
 }
 export function Transactions({ items, admin = false }) {
