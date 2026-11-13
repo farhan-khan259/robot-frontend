@@ -489,13 +489,15 @@ export function Shell({ admin = false }) {
         <main id="main-content" className={s.content}>
           <Outlet />
         </main>
-        <footer className={s.footer}>
-          <span>© {new Date().getFullYear()} RobotNetwork</span>
-          <span>
-            {admin ? "Operations, with clarity." : "A considered way forward."}
-            <Icon name="Leaf" size={13} />
-          </span>
-        </footer>
+        {admin && (
+          <footer className={s.footer}>
+            <span>© {new Date().getFullYear()} RobotNetwork</span>
+            <span>
+              Operations, with clarity.
+              <Icon name="Leaf" size={13} />
+            </span>
+          </footer>
+        )}
       </div>
       <nav className={s.mobileNav} aria-label="Mobile navigation" inert={compact && open}>
         {(admin

@@ -31,7 +31,6 @@ import {
 } from "./core";
 export function Overview() {
   const state = useData("/overview", 20000),
-    summary = useData("/me/summary", 20000),
     content = useData("/public/content"),
     { notify } = useApp();
   const [visible, setVisible] = useState(true);
@@ -42,19 +41,11 @@ export function Overview() {
           <Heading
             eyebrow="YOUR PERSONAL OVERVIEW"
             title={`Welcome back, ${d.user.name.split(" ")[0]}.`}
-            description="A clear view of today. A thoughtful step toward tomorrow."
-            action={
-              <Link to="/plans" className={s.secondary}>
-                Explore the collection
-                <Icon name="ArrowUpRight" size={16} />
-              </Link>
-            }
           />
           {content.data?.announcementEnabled && (
             <Announcement content={content.data} />
           )}
-          <div className={s.dashboardTop}>
-            <section className={s.balanceHero}>
+          <section className={s.balanceHero}>
               <div className={s.balanceHeroTop}>
                 <span>
                   <i />
@@ -98,69 +89,29 @@ export function Overview() {
                 <small>For plan purchases only</small>
               </div>
               <Orbit />
-            </section>
-            <Card className={s.portfolioSpotlight}>
-              <div className={s.spotlightTop}>
-                <Tile icon="Layers" />
-                <Badge status={`${d.activePlans} active`} />
-              </div>
-              <span className={s.eyebrow}>YOUR PORTFOLIO</span>
-              <h2>
-                {d.activePlans
-                  ? `Small steps.
-Steady progress.`
-                  : `Make room for
-what’s next.`}
-              </h2>
-              <p>
-                {d.activePlans
-                  ? "Your plans credit earnings automatically. Every day is recorded in your history."
-                  : "Discover 12 plans with a 45-credit cycle and a first earning on activation."}
-              </p>
-              {summary.data?.plans[0] && (
-                <div className={s.nextCredit}>
-                  <Icon name="Clock" size={17} />
-                  <span>
-                    Next scheduled credit
-                    <strong>{date(summary.data.plans[0].nextCreditAt)}</strong>
-                  </span>
-                </div>
-              )}
-              <Link
-                to={d.activePlans ? "/my-plans" : "/plans"}
-                className={s.textLink}
-              >
-                {d.activePlans ? "View my portfolio" : "Find your plan"}
-                <Icon name="ArrowRight" size={17} />
-              </Link>
-            </Card>
-          </div>
+          </section>
           <div className={s.statsGrid}>
             <Stat
               label="Deposit wallet"
               value={currency(d.user.depositBalance)}
               icon="Wallet"
-              note="Available for plan purchases"
             />
             <Stat
               label="Plan earnings"
               value={currency(d.totalEarnings)}
               icon="TrendingUp"
-              note="Total automatic credits"
             />
             <Stat
               label="Network rewards"
               value={currency(d.totalCommissions)}
               icon="Network"
               tone="sand"
-              note="Approved deposit commissions"
             />
             <Stat
               label="Active plans"
               value={String(d.activePlans).padStart(2, "0")}
               icon="Layers"
               tone="neutral"
-              note="Managed automatically"
             />
           </div>
           <div className={s.dashboardBottom}>
