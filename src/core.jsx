@@ -374,7 +374,14 @@ const adminNav = [
   ["/admin/settings", "Payment settings", "Settings"],
 ];
 export function SettingsMenu({ admin = false }) {
-  const routes = admin ? adminNav : memberNav;
+  const routes = admin
+    ? adminNav
+    : [
+        memberNav.find(([path]) => path === "/account"),
+        ...memberNav.filter(
+          ([path]) => !["/", "/plans", "/my-plans", "/account"].includes(path),
+        ),
+      ];
   return (
     <>
       <Heading
@@ -633,13 +640,15 @@ export function Shell({ admin = false }) {
             </span>
           </NavLink>
         ))}
-        <Link
-          to={admin ? "/admin/menu" : "/settings"}
-          aria-label="Open settings"
+        <NavLink
+          to={admin ? "/admin/menu" : "/account"}
+          aria-label={admin ? "Open settings" : "Open my account"}
+          end={admin}
+          className={({ isActive }) => (isActive ? s.mobileActive : "")}
         >
-          <Icon name="Settings" size={20} />
-          <span>Settings</span>
-        </Link>
+          <Icon name={admin ? "Settings" : "UserRound"} size={20} />
+          <span>{admin ? "Settings" : "My account"}</span>
+        </NavLink>
       </nav>
     </div>
   );

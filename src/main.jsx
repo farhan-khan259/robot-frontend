@@ -69,7 +69,6 @@ function Router() {
         <Route path="support" element={<Support />} />
         <Route path="support/:id" element={<TicketThread />} />
         <Route path="faq" element={<FAQ />} />
-        <Route path="settings" element={<SettingsMenu />} />
       </Route>
       <Route
         element={
