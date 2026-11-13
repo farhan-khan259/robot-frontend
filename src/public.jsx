@@ -282,6 +282,11 @@ export function Auth({ register = false, admin = false }) {
                   </button>
                 </div>
               </Field>
+              {!register && !admin && (
+                <Link className={s.textLink} to="/forgot-password">
+                  Forgot password?
+                </Link>
+              )}
               {register && (
                 <Field
                   label="Referral code (optional)"
@@ -319,6 +324,88 @@ export function Auth({ register = false, admin = false }) {
               Protected by secure sign-in and encrypted transport when served
               over HTTPS.
             </span>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+export function ForgotPassword() {
+  const [submitted, setSubmitted] = useState(false),
+    settings = useData("/public/settings");
+  return (
+    <div className={`${s.auth} ${s.adminAuth}`}>
+      <section className={s.authStory}>
+        <Brand />
+        <div>
+          <span className={s.eyebrow}>ACCOUNT RECOVERY</span>
+          <h1>
+            Get back to
+            <br />what matters.
+          </h1>
+          <p>
+            We’ll help you regain access to your personal RobotNetwork
+            workspace.
+          </p>
+          <div className={s.authOrbit}>
+            <Orbit />
+          </div>
+          <div className={s.authStoryFoot}>
+            <Icon name="Leaf" size={18} />
+            <span>YOUR ACCOUNT, BACK IN REACH</span>
+          </div>
+        </div>
+        <small>© {new Date().getFullYear()} RobotNetwork</small>
+      </section>
+      <section className={s.authPanel}>
+        <div className={s.authForm}>
+          <span className={s.authIcon}>
+            <Icon name="KeyRound" size={28} />
+          </span>
+          <span className={s.eyebrow}>PASSWORD RECOVERY</span>
+          <h1>Forgot your password?</h1>
+          <p>Enter the email address associated with your account.</p>
+          {submitted ? (
+            <Info>
+              Password reset delivery is not configured yet. Please contact
+              support to verify your account and reset your password.
+              {settings.data?.supportEmail && (
+                <>
+                  {" "}
+                  <a href={`mailto:${settings.data.supportEmail}`}>
+                    Contact support
+                  </a>
+                </>
+              )}
+            </Info>
+          ) : (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                setSubmitted(true);
+              }}
+            >
+              <Field
+                label="Email address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                maxLength={160}
+                required
+              />
+              <button className={s.primary}>
+                Continue
+                <Icon name="ArrowRight" size={17} />
+              </button>
+            </form>
+          )}
+          <div className={s.authSwitch}>
+            Remembered your password?
+            <Link to="/login">Sign in</Link>
+          </div>
+          <div className={s.authSecurity}>
+            <Icon name="Lock" size={14} />
+            <span>Your account recovery details are handled securely.</span>
           </div>
         </div>
       </section>

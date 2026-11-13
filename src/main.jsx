@@ -6,7 +6,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider, useApp, Shell, s, Icon } from "./core";
-import { Auth, NotFound } from "./public";
+import { Auth, ForgotPassword, NotFound } from "./public";
 import {
   Overview,
   Plans,
@@ -42,6 +42,7 @@ function Router() {
     <Routes>
       <Route path="/welcome" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Auth />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/register" element={<Auth register />} />
       <Route path="/admin/login" element={<Auth admin />} />
       <Route element={user ? <Shell /> : <Navigate to="/login" replace />}>
