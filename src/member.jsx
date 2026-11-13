@@ -27,6 +27,7 @@ import {
   Orbit,
   ActionCard,
   Avatar,
+  InstitutionMark,
   copyText,
 } from "./core";
 export function Overview() {
@@ -934,7 +935,11 @@ export function DepositPage() {
                   }}
                 >
                   <div className={s.paymentMethod}>
-                    <span className={s.institutionMark}>EP</span>
+                    <InstitutionMark
+                      institution="easypaisa"
+                      monogram="EP"
+                      label="Easypaisa"
+                    />
                     <div>
                       <strong>Easypaisa</strong>
                       <small>Manual bank transfer</small>
@@ -988,7 +993,11 @@ export function DepositPage() {
                   {(d) => (
                     <div className={s.receivingAccount}>
                       <div className={s.inline}>
-                        <span className={s.institutionMark}>EP</span>
+                        <InstitutionMark
+                          institution="easypaisa"
+                          monogram="EP"
+                          label="Easypaisa"
+                        />
                         <strong>Easypaisa receiving account</strong>
                       </div>
                       <Detail label="Account title" value={d.accountName} />
@@ -1261,7 +1270,7 @@ export function WithdrawPage() {
                         >
                           {banks.map((b) => (
                             <option key={b.id} value={b.id}>
-                              {b.monogram} · {b.name}
+                              {b.name}
                             </option>
                           ))}
                         </select>
@@ -1276,9 +1285,11 @@ export function WithdrawPage() {
                         />
                       )}
                       <div className={s.bankSelected}>
-                        <span className={s.institutionMark}>
-                          {banks.find((b) => b.id === bank)?.monogram}
-                        </span>
+                        <InstitutionMark
+                          institution={bank}
+                          monogram={banks.find((b) => b.id === bank)?.monogram}
+                          label={banks.find((b) => b.id === bank)?.name}
+                        />
                         <strong>
                           {banks.find((b) => b.id === bank)?.name}
                         </strong>

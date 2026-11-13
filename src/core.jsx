@@ -60,6 +60,31 @@ import {
 import { api, currency, date } from "./api";
 import s from "./App.module.css";
 export { s, currency, date };
+const institutionLogoSources = {
+  easypaisa:
+    "https://images.seeklogo.com/logo-png/51/1/easypaisa-logo-png_seeklogo-512220.png",
+  jazzcash:
+    "https://images.seeklogo.com/logo-png/61/1/jazz-cash-new-logo-png_seeklogo-613046.png",
+  hbl: "https://www.hbl.com/assets/images/HBL-Device-Logo-full_colour.png",
+  mcb: "https://companieslogo.com/img/orig/MCB.PK-369cfa52.png?t=1720244492",
+};
+export function InstitutionMark({ institution, monogram, label }) {
+  const [failed, setFailed] = useState(false);
+  const source = institutionLogoSources[institution];
+  return (
+    <span className={s.institutionMark} title={label || institution}>
+      {source && !failed ? (
+        <img
+          src={source}
+          alt={`${label || institution} logo`}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <span aria-hidden="true">{monogram || "PK"}</span>
+      )}
+    </span>
+  );
+}
 const icons = {
   ArrowUpRight,
   ArrowDownLeft,

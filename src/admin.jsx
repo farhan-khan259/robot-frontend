@@ -24,6 +24,7 @@ import {
   Modal,
   Transactions,
   Avatar,
+  InstitutionMark,
   Orbit,
 } from "./core";
 import { Detail } from "./member";
@@ -1346,7 +1347,11 @@ export function PaymentSettings() {
                   description="Shown to members when they make a manual deposit."
                 />
                 <div className={s.paymentMethod}>
-                  <span className={s.institutionMark}>EP</span>
+                  <InstitutionMark
+                    institution="easypaisa"
+                    monogram="EP"
+                    label="Easypaisa"
+                  />
                   <div>
                     <strong>Easypaisa</strong>
                     <small>Manual verification only</small>
