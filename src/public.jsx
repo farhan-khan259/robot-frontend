@@ -238,6 +238,7 @@ export function Auth({ register = false, admin = false }) {
                 <Field
                   label="Full name"
                   name="name"
+                  placeholder="Enter your full name"
                   autoComplete="name"
                   maxLength={160}
                   required
@@ -246,6 +247,9 @@ export function Auth({ register = false, admin = false }) {
               <Field
                 label={admin ? "Email address" : "Phone number"}
                 name={admin ? "email" : "phone"}
+                placeholder={
+                  admin ? "Enter your email address" : "Enter your phone number"
+                }
                 type={admin ? "email" : "tel"}
                 autoComplete={admin ? "email" : "tel"}
                 maxLength={admin ? 160 : 24}
@@ -263,6 +267,7 @@ export function Auth({ register = false, admin = false }) {
                   <input
                     aria-label="Password"
                     name="password"
+                    placeholder="Enter your password"
                     type={show ? "text" : "password"}
                     autoComplete={
                       register ? "new-password" : "current-password"
@@ -284,6 +289,7 @@ export function Auth({ register = false, admin = false }) {
                 <Field
                   label="Referral code (optional)"
                   name="referralCode"
+                  placeholder="Enter referral code (optional)"
                   defaultValue={
                     new URLSearchParams(window.location.search).get("ref") || ""
                   }
