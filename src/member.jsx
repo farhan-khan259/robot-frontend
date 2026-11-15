@@ -1469,12 +1469,7 @@ export function PaymentRows({ items, type }) {
                     ? "Easypaisa deposit"
                     : "Manual withdrawal"}
                 </strong>
-                <small>
-                  {date(x.createdAt)} · {x.tid || x.accountNumber}
-                </small>
-                <span className={s.transactionMeta}>
-                  Ref {x._id.slice(-8).toUpperCase()}
-                </span>
+                <small>{date(x.createdAt)}</small>
                 {x.note && <p className={s.reviewNote}>{x.note}</p>}
                 {type === "deposits" && (
                   <button
