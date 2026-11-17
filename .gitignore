@@ -1,6 +1,4 @@
 # Local configuration and secrets
-.env
-.env.*
 !.env.example
 
 # Dependencies and generated production files
@@ -12,3 +10,4 @@ dist/
 coverage/
 test-results/
 .DS_Store
+config.bat
