@@ -232,7 +232,7 @@ function ChannelPopup({ close }) {
         <div>
           <Icon name="Clock" size={25} />
           <small>Launching Date</small>
-          <strong>14 November</strong>
+          <strong>17 November</strong>
         </div>
       </div>
       <a
